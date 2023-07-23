@@ -1,0 +1,35 @@
+- hosts: all
+  vars_files:
+    - var.yml
+  tasks:
+      - name: "Installing httpd"
+        package: 
+            name: "httpd"
+            state: present
+      
+      - name: "Custome folder creation"
+        file:
+            path: "{{ path }}"
+            state: directory
+
+      - name: "Copy template"
+        template:
+            src: "custome.conf.j2"
+            dest: "/etc/httpd/conf.d/custome.conf"
+
+      - name: "Copy index.html"
+        copy: 
+            dest: "{{ path }}/index.html"
+            content: "Web Server Conf on {{ ansible_facts['all_ipv4_addresses'][0] }}: {{ p }} \n"
+
+      - name: "Firewall - port config"
+        firewalld:
+            port: "{{ p }}/tcp"
+            state: enabled
+            permanent : yes
+            immediate : yes 
+
+      - name: "Start Service "
+        service:
+            name: "httpd"
+            state: started

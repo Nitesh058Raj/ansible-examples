@@ -1,0 +1,15 @@
+- hosts: 127.0.0.1
+  vars:
+    db:
+        - name: "Nit"
+          password: "Nit"
+        - name: "NNN"
+          password: "NNN"
+  tasks:
+    - name: "Creating Users with loop"
+      user:
+          name: "{{ item.name }}"
+          password: "{{ item.password | password_hash('sha512')}}"
+          state: present
+      loop : "{{ db }}"
+

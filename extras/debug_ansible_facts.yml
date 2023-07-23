@@ -1,0 +1,13 @@
+- hosts: 127.0.0.1
+  tasks:
+      - name : "Ansible Fats..."
+        debug: 
+            var: ansible_facts
+
+      - name: "default_ipv4 || all_ipv4_addrs[0]"
+        debug:
+            msg: "{{ ansible_facts['all_ipv4_addresses'][0]}}"
+
+      - name: "inventory vars" # for getting ip info
+        debug:
+           var: groups['all']

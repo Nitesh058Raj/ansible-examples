@@ -1,0 +1,24 @@
+- hosts: all
+  tasks:
+  - name: "Docker ClI on podman - service start not required"
+    package:
+      name: "docker"
+      state: "present"
+
+  - name: "Pulling image"
+    command:
+      cmd: "docker pull docker.io/httpd:2.4"
+      
+  - name: "Creating directory for mounting into conatainer"
+    file:
+      path: "/docker-resources/"
+      state: directory 
+  - name: "Copy required files"
+    copy:
+      src: "resources/docker-web.html"
+      dest: "/docker-resources/index.html" 
+
+  - name: "Running Image"
+    command:
+      cmd: "docker run -dit --name my-apache-app -p 8080:80 -v /docker-resources/:/usr/local/apache2/htdocs/ httpd:2.4"
+

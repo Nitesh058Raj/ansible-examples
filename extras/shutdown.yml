@@ -1,0 +1,19 @@
+- hosts: 127.0.0.1
+  tasks: 
+    - name: "removing last line in /etc/fstab"
+      replace:
+          path: "/etc/fstab"
+          regexp: "/dev/sr0 *"
+          replace: "# "
+
+- hosts: all
+  tasks: 
+    - name: "removing last line in /etc/fstab"
+      replace:
+          path: "/etc/fstab"
+          regexp: "/dev/sr0 *"
+          replace: "# "
+
+    - name: "Shuting down every os "
+      command: "init 0"
+

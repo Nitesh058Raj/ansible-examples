@@ -1,0 +1,21 @@
+- hosts: 127.0.0.1
+  vars:
+      os_name: "{{ ansible_facts['os_family'] }}"
+  vars_files:
+      - "{{os_name}}_vars.yml"
+  tasks:
+      - name: "Os_name"
+        debug:
+            var : os_name
+     
+      - name: "Installing {{package_name }}"
+        package: 
+            name: "{{  package_name }}"
+            state: present
+        when: os_name == "RedHat"
+
+      - name: "Installing {{ package_name }}"
+        package: 
+            name: "{{ package_name }}"
+            state: present
+        when: os_name == "Debian"

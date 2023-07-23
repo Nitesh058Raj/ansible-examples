@@ -1,0 +1,2 @@
+p1: 8080    # end user port : Load balancer port which will be public
+p2: 80      # web server port 

@@ -1,0 +1,55 @@
+- hosts: proxy 
+  vars_files:
+      - var.yml
+  tasks:
+      - name: "Installation HAProxy"
+        package:
+            name: "haproxy"
+            state: present
+
+      - name: "Modify conf file..."
+        template:
+            dest: "/etc/haproxy/haproxy.cfg"
+            src: "haproxy.cfg.j2"
+
+      - name: "Start Service : HAProxy"
+        service: 
+            name: "haproxy"
+            state: started
+
+- hosts: web
+  tasks:
+      - name: "Install httpd"
+        package: 
+            name: "httpd"
+
+      - name: "Install php"
+        package: 
+            name: "php"
+
+      - name: "Copy index.php"
+        copy:
+            src: "resources/web.php"
+            dest: "/var/www/html/index.php"
+     
+      - name: "firewall config for port : 8080/tcp" 
+        firewalld:
+            port: "8080/tcp"
+            permanent: true
+            state: enabled
+            immediate: true
+
+      - name: "firewall config for service: http" 
+        firewalld:
+            service: "http"
+            permanent: true
+            state: enabled
+            immediate: true
+
+
+
+      - name : "Starting the server"
+        service:
+            name: "httpd"
+            state: "started"
+

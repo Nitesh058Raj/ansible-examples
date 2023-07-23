@@ -1,0 +1,51 @@
+- hosts: all
+  tasks:
+      - name: "Installing httpd"
+        package: 
+            name: "httpd"
+            state: present
+
+      - name: "Copy Index.html"
+        copy: 
+            dest: "/var/www/html/index.html"
+            content: "Works well !!!!!!"
+
+      - name: "Modify httpd.conf"
+        replace:
+            path: "/etc/httpd/conf/httpd.conf"
+            after: '<Directory "/var/www/html">'
+            before: '</Directory>'
+            regexp: 'AllowOverride None'
+            replace: 'AllowOverride AuthConfig'
+      
+      - name: "Copy .htaccess"
+        copy:
+            dest: "/var/www/html/.htaccess"
+            src: "htaccessfile"
+
+      - name : "Installing python36 "  # for pip3 --> for passlib --> for htpasswd
+        package:
+            name: "python36"
+            state: present
+
+      - name: "Installing passlib "
+        pip:
+            name: "passlib"
+            state: present
+            executable: pip3
+      
+      - name : "Installing htpasswd"
+        package:
+            name: "httpd-tools"
+            state: present
+
+      - name: "User:Pass for db"
+        htpasswd:
+            path: /etc/webpasswd
+            name: bob
+            password: bb
+
+      - name : "Starting httpd"
+        service:
+            name: "httpd"
+            state: restarted

@@ -1,0 +1,4 @@
+AuthType basic 
+AuthUserFile /etc/webpasswd
+AuthName "Password Required......"
+Require valid-user

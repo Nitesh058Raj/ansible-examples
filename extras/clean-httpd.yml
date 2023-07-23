@@ -1,0 +1,18 @@
+- hosts: all
+  tasks: 
+      - name: "stopping httpd"
+        service:
+            name: "httpd"
+            state: stopped
+        ignore_errors: True
+
+      - name: "removing httpd"
+        package: 
+            name: "httpd"
+            state: absent
+        ignore_errors: True
+
+      - name: "removing httpd files"
+        file:
+            path: "/etc/httpd/"
+            state: absent
