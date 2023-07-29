@@ -1,0 +1,37 @@
+- name: Install Docker and run httpd container
+  hosts: all
+  tasks:
+    - name: Install Docker
+      package:
+        name: docker-ce
+        state: present
+
+    - name: Start docker daemon
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull docker image
+      community.docker.docker_image:
+        name: httpd
+        source: pull
+
+    - name: Run docker container
+      community.docker.docker_container:
+        name: httpd
+        image: httpd
+        state: started
+        ports:
+          - "80:80"
+
+    - name: Copy index.html in target node
+      copy:
+        src: index.html
+        dest: /root/index.html
+
+    - name: Copy index.html to docker container
+      community.docker.docker_container_copy_into:
+        container: httpd
+        path: /root/index.html
+        container_path: /usr/local/apache2/htdocs/index.html
